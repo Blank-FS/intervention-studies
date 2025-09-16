@@ -51,6 +51,7 @@ Verify installations and check if they are compatible with versions below:
 2. **Configure environment variables**
 
    ```bash
+    # may have to create certs folder first
     $ cd path/to/backend/src/main/resources/certs/
 
     # create rsa key pair
