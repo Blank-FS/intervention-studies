@@ -1,6 +1,6 @@
 # Intervention Studies
 
-A full-stack web application with a **Spring Boot (Java 21)** backend and a **Next.js (React, TypeScript)** frontend. The system supports role-based access for **researchers** and **participants** using JWT authentication.
+A full-stack web application with a **Spring Boot (Java 21)** backend and a **Next.js (React, TypeScript)** frontend. The system supports role-based access for **researchers** and **participants**.
 
 ---
 
