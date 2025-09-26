@@ -13,12 +13,5 @@ export async function POST() {
     maxAge: 0,
   });
 
-  res.cookies.set("role", "", {
-    httpOnly: false,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
-
   return res;
 }

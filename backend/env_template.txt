@@ -1,0 +1,10 @@
+#!/bin/bash
+# set-env.sh
+# Export environment variables for local Spring Boot run
+
+export MAIL_USERNAME=
+export MAIL_PASSWORD=
+
+echo "Environment variables exported:"
+echo "MAIL_USERNAME = $MAIL_USERNAME"
+echo "MAIL_PASSWORD = $( [ -z "$MAIL_PASSWORD" ] && echo "NOT SET" || echo "SET" )"

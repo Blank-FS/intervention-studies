@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Helper: decode JWT and return role
 function getRoleFromToken(token: string) {
@@ -14,16 +15,19 @@ function getRoleFromToken(token: string) {
   }
 }
 
-export default function LoginPage() {
+export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/token`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -50,41 +54,64 @@ export default function LoginPage() {
       } else if (role === "PARTICIPANT") {
         router.push("/participant");
       } else {
-        // default fallback
         router.push("/");
       }
     } catch (err) {
-      console.error(err);
       setError("Invalid username or password");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <form onSubmit={handleLogin} className="p-6 shadow rounded border w-80">
-        <h1 className="text-xl font-bold mb-4">Login</h1>
-        {error && <p className="text-red-500 mb-2">{error}</p>}
+    <form
+      onSubmit={handleLogin}
+      className="p-6 shadow rounded border w-full max-w-md"
+    >
+      <h2 className="text-lg font-semibold mb-4">Login</h2>
+      {error && <div className="mb-3 text-red-600">{error}</div>}
+
+      <label className="block mb-2">
+        <span>Email</span>
         <input
           type="text"
-          placeholder="Username"
-          className="border p-2 w-full mb-2"
+          required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="mt-1 block w-full border p-2"
         />
+      </label>
+
+      <label className="block mb-4">
+        <span>Password</span>
         <input
           type="password"
-          placeholder="Password"
-          className="border p-2 w-full mb-4"
+          required
+          minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="mt-1 block w-full border p-2"
         />
+      </label>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
+      >
+        {loading ? "Logging in..." : "Login"}
+      </button>
+
+      <p className="text-sm mt-4 text-center">
+        Don’t have an account?{" "}
         <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
+          type="button"
+          onClick={toggleForm}
+          className="text-blue-600 hover:underline"
         >
-          Login
+          Register here
         </button>
-      </form>
-    </div>
+      </p>
+    </form>
   );
 }

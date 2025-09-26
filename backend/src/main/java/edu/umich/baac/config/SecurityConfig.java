@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import edu.umich.baac.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,8 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -35,31 +38,34 @@ public class SecurityConfig {
         this.rsaKeys = rsaKeys;
     }
 
+
     @Bean
-    public AuthenticationManager authManager(UserDetailsService userDetailsService){
-        var authProvider = new DaoAuthenticationProvider(userDetailsService);
+    public AuthenticationManager authManager(CustomUserDetailsService userDetailsService){
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
     }
 
     @Bean
-    public UserDetailsService users(){
-        return new InMemoryUserDetailsManager(
-                User.withUsername("researcher")
-                        .password("{noop}password")
-                        .roles("RESEARCHER")
-                        .build(),
-                User.withUsername("participant")
-                        .password("{noop}password")
-                        .roles("PARTICIPANT")
-                        .build()
-        );
+    public UserDetailsService users() {
+        // In-memory dummy users for testing
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("researcher")
+                .password(passwordEncoder().encode("password"))
+                .roles("RESEARCHER")
+                .build());
+        manager.createUser(User.withUsername("participant")
+                .password(passwordEncoder().encode("password"))
+                .roles("PARTICIPANT")
+                .build());
+        return manager;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/token"))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/token").permitAll().anyRequest().authenticated())
+                        .ignoringRequestMatchers("/auth/**"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).
                 httpBasic(Customizer.withDefaults())
@@ -76,5 +82,10 @@ public class SecurityConfig {
         JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

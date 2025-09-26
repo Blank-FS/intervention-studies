@@ -35,3 +35,5 @@ build/
 ### Other ###
 src/main/resources/certs/*
 data/
+*.env
+*.sh

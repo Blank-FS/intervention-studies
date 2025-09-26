@@ -30,9 +30,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // If no token → only allow / and /login
+  // Paths that don't require auth
   if (!token) {
-    if (pathname === "/" || pathname.startsWith("/login")) {
+    if (pathname === "/" || pathname.startsWith("/auth")) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/", req.url));
@@ -47,7 +47,7 @@ export async function middleware(req: NextRequest) {
     return res;
   }
 
-  // ✅ Redirect from "/" or "/login" to dashboard
+  // Redirect from "/" or "/login" to dashboard
   if (pathname === "/" || pathname.startsWith("/login")) {
     if (role === "RESEARCHER") {
       return NextResponse.redirect(new URL("/researcher", req.url));

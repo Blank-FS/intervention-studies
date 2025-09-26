@@ -1,0 +1,14 @@
+name: Feature Request
+description: Suggest an idea for the app.
+title: '[Feature Request]: '
+labels:
+  - feature
+body:
+  - type: textarea
+    id: '1'
+    attributes:
+      label: Description
+      description: >-
+        Please add a clear and concise description for the feature you would like to see enhanced or implemented.
+    validations:
+      required: true

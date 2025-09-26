@@ -48,7 +48,7 @@ Verify installations and check if they are compatible with versions below:
    $ git clone https://github.com/Blank-FS/intervention-studies.git
    ```
 
-2. **Configure environment variables**
+2. **Create keys (If haven't done so already)**
 
    ```bash
     # may have to create certs folder first
@@ -62,7 +62,31 @@ Verify installations and check if they are compatible with versions below:
     $ openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
    ```
 
-3. **Build & run backend**
+3. **Set mail server environment variables**
+
+   - **NOTE:** This step is only required if you want to test user registration (since a verification email is sent). Keep in mind that environment variables need to be reset every time you open a new terminal session unless you make them permanent.
+
+   - Watch this [tutorial](https://www.youtube.com/watch?v=ZfEK3WP73eY) on how to obtain credentials.
+
+   **WSL/Linux**
+
+   A shell script template has been provided in `env_template.txt` for convenience. Alternatively, run the following commands in the terminal, replacing with valid credentials:
+
+   ```bash
+      export MAIL_USERNAME=your_email@example.com
+      export MAIL_PASSWORD=your_password
+   ```
+
+   **Windows (PowerShell)**
+
+   Run these commands in PowerShell before starting your app:
+
+   ```bash
+      $env:MAIL_USERNAME="your_email@example.com"
+      $env:MAIL_PASSWORD="your_password"
+   ```
+
+4. **Build & run backend**
 
    ```bash
    $ cd path/to/backend/
@@ -107,17 +131,17 @@ The frontend will start at: `http://localhost:3000`
 Access the different routes by logging in as different test users:
 
 - Researcher
-  - Username: `researcher`
+  - Username: `admin@example.com`
   - Password: `password`
 - Participant
-  - Username: `participant`
+  - Username: `participant@example.com`
   - Password: `password`
 
 ---
 
 ## Project structure
 
-    ```bash
+    ```
     intervention-studies/
     │── backend/          # Spring Boot (REST API, JWT, roles)
     │── frontend/         # Next.js (React UI, middleware auth)
