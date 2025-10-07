@@ -1,6 +1,8 @@
 "use client";
 
+import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -11,11 +13,8 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-    >
-      Logout
-    </button>
+    <Button onClick={handleLogout} className="flex gap-2 items-center">
+      <LogOutIcon /> Logout
+    </Button>
   );
 }
