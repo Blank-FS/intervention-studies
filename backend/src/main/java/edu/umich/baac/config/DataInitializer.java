@@ -47,9 +47,9 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initModules(ModuleRepository moduleRepository) {
         return args -> {
-            String videoFileName = "file_example_MP4_1280_10MG.mp4";
+            String videoFileName = "sample-10s.mp4";
             String localDir = "data/videos";
-            String remoteUrl = "https://file-examples.com/storage/feb0ee5efb68e522f95d61d/2017/04/file_example_MP4_1280_10MG.mp4";
+            String remoteUrl = "https://download.samplelib.com/mp4/sample-10s.mp4";
 
             File dir = new File(localDir);
             if (!dir.exists()) {
@@ -82,7 +82,7 @@ public class DataInitializer {
             Module module = new Module();
             module.setTitle("Test Module");
             module.setParagraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-            module.setVideoUrl("file_example_MP4_1280_10MG.mp4");
+            module.setVideoUrl(videoFileName);
             moduleRepository.save(module);
         };
     }
