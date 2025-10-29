@@ -1,11 +1,9 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import ModuleForm from "./ModuleForm";
 import { Module } from "@/types/definition";
 import ModuleItem from "../general/ModuleItem";
 
-export default function ModuleManagement() {
+export default function ModuleSection() {
   const [modules, setModules] = useState<Module[]>([]);
   const [selected, setSelected] = useState<Module | null>(null);
 
@@ -29,7 +27,6 @@ export default function ModuleManagement() {
       <div className="w-64 bg-muted border-r overflow-y-auto sticky top-4 h-full rounded-lg">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="font-semibold">Modules</h2>
-          <ModuleForm />
         </div>
         <ul>
           {modules.map((m) => (
@@ -49,7 +46,7 @@ export default function ModuleManagement() {
       {/* Main content */}
       <div className="flex-1 p-4 overflow-y-auto bg-secondary rounded-lg">
         {selected ? (
-          <ModuleItem module={selected} preview />
+          <ModuleItem module={selected} />
         ) : (
           <p className="">Select a module from the sidebar</p>
         )}

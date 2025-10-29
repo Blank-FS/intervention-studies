@@ -8,7 +8,7 @@ export default function ResearcherPage() {
   const [activeTab, setActiveTab] = useState<"users" | "modules">("users");
 
   return (
-    <div className="p-4">
+    <div>
       {/* Tab Controls */}
       <div className="flex">
         <button

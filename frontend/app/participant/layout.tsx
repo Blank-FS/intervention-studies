@@ -13,7 +13,7 @@ export default function ParticipantLayout({
       </header>
 
       {/* Main content area */}
-      <main className="flex-1 p-6">{children}</main>
+      <main className="flex-1 p-4">{children}</main>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 package edu.umich.baac.model.module;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,13 +19,17 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
-    private String text;
+    @Column
+    private String questionText;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "module_id")
     private Module module;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
+
+    @Column
+    private Long correctOptionId;
 }

@@ -1,7 +1,10 @@
 package edu.umich.baac.model.module;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 public class Option {
     @Id
@@ -10,9 +13,8 @@ public class Option {
 
     private String text;
 
-    private boolean isCorrect;
-
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "question_id")
     private Question question;
 }

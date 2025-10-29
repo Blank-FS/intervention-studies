@@ -14,9 +14,9 @@ export async function GET(req: Request) {
   });
 
   if (!res.ok) {
-    const text = await res.text();
+    const errorText = await res.text();
     return NextResponse.json(
-      { error: text || "Request failed" },
+      { error: errorText || `Backend returned ${res.status}` },
       { status: res.status }
     );
   }
