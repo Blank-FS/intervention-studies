@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Card } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 interface RegisterFormProps {
   onRegistered: (email: string) => void;
@@ -55,77 +58,76 @@ export default function RegisterForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-6 shadow rounded border w-full max-w-md"
-    >
-      <h2 className="text-lg font-semibold mb-4">Create an account</h2>
-      {error && <div className="mb-3 text-red-600">{error}</div>}
+    <Card className="p-8 w-full max-w-md">
+      <form onSubmit={handleSubmit}>
+        <h2 className="text-lg font-semibold mb-4">Create an account</h2>
+        {error && <div className="mb-3 text-red-600">{error}</div>}
 
-      <label className="block mb-2">
-        <span>Email</span>
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full border p-2"
-        />
-      </label>
+        <label className="block mb-2">
+          <span>Email</span>
+          <Input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mt-1 block w-full border p-2"
+          />
+        </label>
 
-      <label className="block mb-2">
-        <span>Prolific ID</span>
-        <input
-          type="text"
-          required
-          value={prolificId}
-          onChange={(e) => setProlificId(e.target.value)}
-          className="mt-1 block w-full border p-2"
-        />
-      </label>
+        <label className="block mb-2">
+          <span>Prolific ID</span>
+          <Input
+            type="text"
+            required
+            value={prolificId}
+            onChange={(e) => setProlificId(e.target.value)}
+            className="mt-1 block w-full border p-2"
+          />
+        </label>
 
-      <label className="block mb-2">
-        <span>Password</span>
-        <input
-          type="password"
-          required
-          minLength={8}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full border p-2"
-        />
-      </label>
+        <label className="block mb-2">
+          <span>Password</span>
+          <Input
+            type="password"
+            required
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1 block w-full border p-2"
+          />
+        </label>
 
-      <label className="block mb-4">
-        <span>Confirm Password</span>
-        <input
-          type="password"
-          required
-          minLength={8}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="mt-1 block w-full border p-2"
-        />
-      </label>
+        <label className="block mb-4">
+          <span>Confirm Password</span>
+          <Input
+            type="password"
+            required
+            minLength={8}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="mt-1 block w-full border p-2"
+          />
+        </label>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white py-2 rounded disabled:opacity-50"
-      >
-        {loading ? "Submitting..." : "Register"}
-      </button>
-      <p className="text-sm mt-4 text-center">
-        Already have an account?{" "}
-        <button
-          type="button"
-          onClick={toggleForm}
-          className="text-blue-600 hover:underline"
+        <Button
+          type="submit"
           disabled={loading}
+          className="w-full disabled:opacity-50"
         >
-          Login here
-        </button>
-      </p>
-    </form>
+          {loading ? "Submitting..." : "Register"}
+        </Button>
+        <p className="text-sm mt-4 text-center">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={toggleForm}
+            className="text-blue-500 hover:underline"
+            disabled={loading}
+          >
+            Login here
+          </button>
+        </p>
+      </form>
+    </Card>
   );
 }

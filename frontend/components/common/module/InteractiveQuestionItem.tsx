@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Question, Option } from "@/types/definition";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface QuestionProps {
   question: Question;
@@ -7,7 +9,7 @@ interface QuestionProps {
   onAnswer?: (questionId: number, selectedOptionId: number) => void;
 }
 
-const QuestionComponent: React.FC<QuestionProps> = ({
+const InteractiveQuestionItem: React.FC<QuestionProps> = ({
   question,
   onAnswer,
   idx,
@@ -39,8 +41,8 @@ const QuestionComponent: React.FC<QuestionProps> = ({
   };
 
   return (
-    <div className="p-4 border rounded">
-      <h5 className="font-semibold mb-2">{`${
+    <Card className="p-4">
+      <h5 className="font-semibold">{`${
         idx != undefined ? `Q${idx + 1} - ` : ""
       }${question.questionText}`}</h5>
 
@@ -48,14 +50,15 @@ const QuestionComponent: React.FC<QuestionProps> = ({
         {shuffledOptions.map((opt) => {
           // Determine background color after submission
           let optionClass =
-            "border p-2 rounded cursor-pointer transition-colors";
+            "border p-2 rounded-md bg-muted cursor-pointer transition-colors";
 
           if (submitted) {
             if (opt.id === question.correctOptionId)
-              optionClass += " bg-green-500";
-            else if (opt.id === selectedOptionId) optionClass += " bg-red-500";
+              optionClass += " border-green-400";
+            else if (opt.id === selectedOptionId)
+              optionClass += " border-red-400";
           } else if (opt.id === selectedOptionId) {
-            optionClass += " bg-blue-600";
+            optionClass += " border-blue-400";
           } else {
             optionClass += " hover:bg-neutral-600";
           }
@@ -79,19 +82,19 @@ const QuestionComponent: React.FC<QuestionProps> = ({
       </ul>
 
       {!submitted ? (
-        <button
+        <Button
           onClick={handleSubmit}
           disabled={selectedOptionId === null}
-          className="mt-2 bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="disabled:opacity-50"
         >
           Submit
-        </button>
+        </Button>
       ) : (
         <p
-          className={`mt-2 font-medium ${
+          className={`font-medium ${
             selectedOptionId === question.correctOptionId
-              ? "text-green-600"
-              : "text-red-600"
+              ? "text-green-400"
+              : "text-red-400"
           }`}
         >
           {selectedOptionId === question.correctOptionId
@@ -99,8 +102,8 @@ const QuestionComponent: React.FC<QuestionProps> = ({
             : "❌ Incorrect."}
         </p>
       )}
-    </div>
+    </Card>
   );
 };
 
-export default QuestionComponent;
+export default InteractiveQuestionItem;

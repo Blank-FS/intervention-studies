@@ -2,9 +2,7 @@ package edu.umich.baac.controller;
 
 
 import edu.umich.baac.model.User;
-import edu.umich.baac.model.module.Module;
-import edu.umich.baac.repository.UserRepository;
-import edu.umich.baac.repository.module.ModuleRepository;
+import edu.umich.baac.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +15,11 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository  userRepository;
+    private final UserService userService;
 
     @GetMapping
     @PreAuthorize("hasRole('RESEARCHER')")
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getUsers();
     }
 }

@@ -1,9 +1,9 @@
 "use client";
 import { Question } from "@/types/definition";
 import React, { useEffect, useState } from "react";
-import QuestionComponent from "./QuestionComponent";
+import InteractiveQuestionItem from "./InteractiveQuestionItem";
 
-const QuestionSection = ({
+const InteractiveQuestionSection = ({
   moduleId,
   preview = false,
 }: {
@@ -41,9 +41,9 @@ const QuestionSection = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <h4 className="text-lg font-semibold">Questions</h4>
+      <h4 className="text-xl font-semibold">Questions</h4>
       {questions.map((q, idx) => (
-        <QuestionComponent
+        <InteractiveQuestionItem
           key={q.id}
           question={q}
           idx={idx}
@@ -54,4 +54,4 @@ const QuestionSection = ({
   );
 };
 
-export default QuestionSection;
+export default InteractiveQuestionSection;

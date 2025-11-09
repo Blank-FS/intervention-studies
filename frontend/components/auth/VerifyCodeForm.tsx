@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Card } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 interface VerifyCodeFormProps {
   email: string;
@@ -53,35 +56,35 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleVerify}
-      className="p-6 shadow rounded border w-full max-w-md"
-    >
-      <h2 className="text-lg font-semibold mb-4">Enter Verification Code</h2>
-      <p className="mb-3 text-sm text-gray-600">
-        A code has been sent to <strong>{email}</strong>. Please enter it below.
-      </p>
+    <Card className="p-8 w-full max-w-md">
+      <form onSubmit={handleVerify}>
+        <h2 className="text-lg font-semibold mb-4">Enter Verification Code</h2>
+        <p className="mb-3 text-sm text-gray-600">
+          A code has been sent to <strong>{email}</strong>. Please enter it
+          below.
+        </p>
 
-      {error && <div className="mb-3 text-red-600">{error}</div>}
+        {error && <div className="mb-3 text-red-600">{error}</div>}
 
-      <label className="block mb-4">
-        <span>Verification Code</span>
-        <input
-          type="text"
-          required
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="mt-1 block w-full border p-2"
-        />
-      </label>
+        <label className="block mb-4">
+          <span>Verification Code</span>
+          <Input
+            type="text"
+            required
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="mt-1 block w-full border p-2"
+          />
+        </label>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-green-600 text-white py-2 rounded disabled:opacity-50"
-      >
-        {loading ? "Verifying..." : "Verify"}
-      </button>
-    </form>
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full disabled:opacity-50"
+        >
+          {loading ? "Verifying..." : "Verify"}
+        </Button>
+      </form>
+    </Card>
   );
 }

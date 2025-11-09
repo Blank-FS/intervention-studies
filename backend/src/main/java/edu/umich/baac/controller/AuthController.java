@@ -1,12 +1,11 @@
 package edu.umich.baac.controller;
 
-import edu.umich.baac.model.ErrorMessage;
 import edu.umich.baac.model.LoginRequest;
 import edu.umich.baac.model.RegisterRequest;
 import edu.umich.baac.model.VerifyRequest;
 import edu.umich.baac.service.TokenService;
 import edu.umich.baac.service.UserService;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping ("/auth")
 public class AuthController {
@@ -27,11 +27,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
-    public AuthController(TokenService tokenService, AuthenticationManager authenticationManager, UserService userService) {
-        this.tokenService = tokenService;
-        this.authenticationManager =  authenticationManager;
-        this.userService = userService;
-    }
 
     @PostMapping("/token")
     public Map<String, String> token(@RequestBody LoginRequest userLogin) {

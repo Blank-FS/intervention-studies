@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
@@ -7,12 +8,7 @@ export default function HomePage() {
 
   return (
     <main className="flex flex-col items-center justify-center h-screen">
-      <button
-        onClick={() => router.push("/auth")}
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        Login
-      </button>
+      <Button onClick={() => router.push("/auth")}>Login</Button>
     </main>
   );
 }

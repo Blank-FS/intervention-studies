@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Module } from "@/types/definition";
-import ModuleItem from "../general/ModuleItem";
+import ModuleWrapper from "../common/module/ModuleWrapper";
 
 export default function ModuleSection() {
   const [modules, setModules] = useState<Module[]>([]);
@@ -46,7 +46,7 @@ export default function ModuleSection() {
       {/* Main content */}
       <div className="flex-1 p-4 overflow-y-auto bg-secondary rounded-lg">
         {selected ? (
-          <ModuleItem module={selected} />
+          <ModuleWrapper module={selected} />
         ) : (
           <p className="">Select a module from the sidebar</p>
         )}

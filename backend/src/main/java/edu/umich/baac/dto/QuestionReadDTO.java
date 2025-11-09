@@ -11,18 +11,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionDTO {
+public class QuestionReadDTO {
     private Long id;
     private String questionText;
     private List<Option> options;
     private Long correctOptionId;
     private Long selectedOptionId; // user's previous answer, if any
 
-    public QuestionDTO(Question q) {
+    public QuestionReadDTO(Question q) {
         this.id = q.getId();
         this.questionText = q.getQuestionText();
         this.correctOptionId = q.getCorrectOptionId();
         this.options = q.getOptions();
     }
 }
-
