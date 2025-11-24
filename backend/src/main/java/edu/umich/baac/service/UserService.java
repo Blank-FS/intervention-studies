@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +30,13 @@ public class UserService {
         if (userRepo.findByProlificId(prolificId).isPresent())
             throw new IllegalArgumentException("Account with Prolific ID already exists");
 
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setProlificId(prolificId);
-        user.setEnabled(false);
+        User user = User.builder()
+                .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                .email(email)
+                .password(passwordEncoder.encode(rawPassword))
+                .prolificId(prolificId)
+                .enabled(false)
+                .build();
 
         // generate verification code
         String code = String.format("%06d", new Random().nextInt(999999));

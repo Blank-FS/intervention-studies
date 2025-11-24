@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +23,10 @@ import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 
 import VideoUpload from "@/components/researcher/VideoUpload";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Module } from "@/lib/types/module";
+import { toast } from "sonner";
 
 // Validation schema
 const schema = z.object({
@@ -35,7 +37,12 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-const ModuleForm = () => {
+const ModuleCreateForm = ({
+  onCreate,
+}: {
+  onCreate?: (module: Module) => void;
+}) => {
+  const [open, setOpen] = useState(false);
   const methods = useForm<FormFields>({
     resolver: zodResolver(schema),
   });
@@ -53,22 +60,27 @@ const ModuleForm = () => {
         credentials: "include", // send cookie
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to submit: ${errorText}`);
-      }
+      if (!response.ok) throw new Error(await response.text());
 
       const createdModule = await response.json();
-      console.log("Module created:", createdModule);
-
+      toast.success("Module created successfully!");
       methods.reset();
+      setOpen(false);
+      onCreate?.(createdModule);
     } catch (error) {
       console.error("Submit error:", error);
+      toast.error("Failed to create module.");
     }
   };
 
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) methods.reset();
+      }}
+    >
       <Tooltip>
         <TooltipTrigger asChild>
           <DialogTrigger asChild>
@@ -100,7 +112,7 @@ const ModuleForm = () => {
             <label htmlFor="title">Title</label>
             <Input {...methods.register("title")} type="text" id="title" />
             {methods.formState.errors.title && (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-red-500">
                 {methods.formState.errors.title.message}
               </p>
             )}
@@ -109,7 +121,7 @@ const ModuleForm = () => {
             <label htmlFor="paragraph">Paragraph</label>
             <Textarea {...methods.register("paragraph")} id="paragraph" />
             {methods.formState.errors.paragraph && (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-red-500">
                 {methods.formState.errors.paragraph.message}
               </p>
             )}
@@ -117,7 +129,7 @@ const ModuleForm = () => {
             {/* Video Upload */}
             <VideoUpload />
             {methods.formState.errors.video && (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-red-500">
                 {methods.formState.errors.video.message}
               </p>
             )}
@@ -138,4 +150,4 @@ const ModuleForm = () => {
   );
 };
 
-export default ModuleForm;
+export default ModuleCreateForm;

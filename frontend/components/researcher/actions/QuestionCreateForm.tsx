@@ -21,8 +21,8 @@ import { Separator } from "@/components/ui/separator";
 import { useFieldArray, useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spinner } from "../ui/spinner";
-import { Question } from "@/types/definition";
+import { Spinner } from "../../ui/spinner";
+import { Question } from "@/lib/types/question";
 import { toast } from "sonner";
 
 const optionSchema = z.object({
@@ -40,10 +40,10 @@ type QuestionFormFields = z.input<typeof questionsSchema>;
 
 const QuestionCreateForm = ({
   moduleId,
-  onCreated,
+  onCreate,
 }: {
   moduleId: number;
-  onCreated?: (question: Question) => void;
+  onCreate?: (question: Question) => void;
 }) => {
   const [open, setOpen] = useState(false);
   const methods = useForm<QuestionFormFields>({
@@ -82,13 +82,14 @@ const QuestionCreateForm = ({
       });
 
       if (!response.ok) throw new Error(await response.text());
-      const created = await response.json();
+
+      const createdQuestion = await response.json();
       toast.success("Question created successfully!");
       methods.reset();
       setOpen(false);
-      onCreated?.(created);
-    } catch (err) {
-      console.error("Submit error:", err);
+      onCreate?.(createdQuestion);
+    } catch (error) {
+      console.error("Submit error:", error);
       toast.error("Failed to create question.");
     }
   };
@@ -113,7 +114,7 @@ const QuestionCreateForm = ({
           <p>Create a new question</p>
         </TooltipContent>
       </Tooltip>
-      <DialogContent className="max-h-[96vh] flex flex-col">
+      <DialogContent className="flex max-h-[96vh] flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle>Add Question</DialogTitle>
           <DialogDescription>
@@ -137,7 +138,7 @@ const QuestionCreateForm = ({
                 </label>
                 <Input {...register("questionText")} id="questionText" />
                 {formState.errors.questionText && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-sm text-red-500">
                     {formState.errors.questionText.message}
                   </p>
                 )}
@@ -160,7 +161,7 @@ const QuestionCreateForm = ({
                   {fields.map((field, index) => (
                     <div
                       key={field.id}
-                      className="flex items-center gap-2 border p-2 rounded-md"
+                      className="flex items-center gap-2 rounded-md border p-2"
                     >
                       <input
                         type="radio"
@@ -181,18 +182,18 @@ const QuestionCreateForm = ({
                         }}
                         disabled={fields.length <= 2}
                       >
-                        <Trash className="w-4 h-4 text-red-500" />
+                        <Trash className="h-4 w-4 text-red-500" />
                       </Button>
                     </div>
                   ))}
                 </div>
                 {formState.errors.options && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-sm text-red-500">
                     {formState.errors.options.message}
                   </p>
                 )}
                 {formState.errors.correctOptionIndex && (
-                  <p className="text-red-500 text-sm">
+                  <p className="text-sm text-red-500">
                     {formState.errors.correctOptionIndex.message}
                   </p>
                 )}

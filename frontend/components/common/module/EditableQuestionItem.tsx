@@ -1,4 +1,4 @@
-import QuestionDeleteForm from "@/components/researcher/QuestionDeleteForm";
+import QuestionDeleteForm from "@/components/researcher/actions/QuestionDeleteForm";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Question } from "@/types/definition";

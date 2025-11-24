@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Module } from "@/types/definition";
+import { Module } from "@/lib/types/module";
 import ModuleWrapper from "../common/module/ModuleWrapper";
+import ModuleProgressCircle from "./ModuleProgressCircle";
 
 export default function ModuleSection() {
   const [modules, setModules] = useState<Module[]>([]);
@@ -24,8 +25,8 @@ export default function ModuleSection() {
   return (
     <div className="flex gap-4">
       {/* Sidebar */}
-      <div className="w-64 bg-muted border-r overflow-y-auto sticky top-4 h-full rounded-lg">
-        <div className="flex justify-between items-center p-4 border-b">
+      <div className="bg-muted sticky top-4 h-full w-64 overflow-y-auto rounded-lg border-r">
+        <div className="flex items-center justify-between border-b p-4">
           <h2 className="font-semibold">Modules</h2>
         </div>
         <ul>
@@ -33,18 +34,19 @@ export default function ModuleSection() {
             <li
               key={m.id}
               onClick={() => setSelected(m)}
-              className={`p-4 cursor-pointer hover:bg-muted-foreground ${
+              className={`hover:bg-muted-foreground flex cursor-pointer items-center justify-between p-4 ${
                 selected?.id === m.id ? "bg-muted-foreground font-bold" : ""
               }`}
             >
               {m.id}. {m.title}
+              <ModuleProgressCircle moduleId={m.id} />
             </li>
           ))}
         </ul>
       </div>
 
       {/* Main content */}
-      <div className="flex-1 p-4 overflow-y-auto bg-secondary rounded-lg">
+      <div className="bg-secondary flex-1 overflow-y-auto rounded-lg p-4">
         {selected ? (
           <ModuleWrapper module={selected} />
         ) : (

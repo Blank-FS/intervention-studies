@@ -33,7 +33,7 @@ public class ResponseController {
     private final OptionRepository optionRepo;
 
     @PostMapping
-    @PreAuthorize("hasRole('PARTICIPANT')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> submitResponse(
             Authentication authentication,
             @RequestBody ResponseRequest req

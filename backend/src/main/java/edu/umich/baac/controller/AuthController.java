@@ -1,8 +1,8 @@
 package edu.umich.baac.controller;
 
-import edu.umich.baac.model.LoginRequest;
-import edu.umich.baac.model.RegisterRequest;
-import edu.umich.baac.model.VerifyRequest;
+import edu.umich.baac.dto.auth.LoginRequestDTO;
+import edu.umich.baac.dto.auth.RegisterRequestDTO;
+import edu.umich.baac.dto.auth.VerifyRequestDTO;
 import edu.umich.baac.service.TokenService;
 import edu.umich.baac.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class AuthController {
 
 
     @PostMapping("/token")
-    public Map<String, String> token(@RequestBody LoginRequest userLogin) {
+    public Map<String, String> token(@RequestBody LoginRequestDTO userLogin) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()));
         LOG.debug("Token requested for user: '{}'", authentication.getName());
         String token = tokenService.generateToken(authentication);
@@ -44,13 +44,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest req) {
+    public ResponseEntity<String> register(@RequestBody RegisterRequestDTO req) {
         userService.registerUser(req.email(), req.password(), req.prolificId());
         return ResponseEntity.ok("Verification code sent to your email");
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verify(@RequestBody VerifyRequest req) {
+    public ResponseEntity<?> verify(@RequestBody VerifyRequestDTO req) {
         boolean success = userService.verifyUser(req.email(), req.code());
         if (success) {
             String token = tokenService.generateTokenByEmail(req.email());

@@ -2,64 +2,64 @@ package edu.umich.baac.controller;
 
 import edu.umich.baac.dto.QuestionCreateDTO;
 import edu.umich.baac.dto.QuestionReadDTO;
-import edu.umich.baac.model.module.Module;
+import edu.umich.baac.dto.form.ModuleFormDTO;
+import edu.umich.baac.dto.response.ModuleResponseDTO;
 import edu.umich.baac.service.ModuleService;
 import edu.umich.baac.service.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/modules")
 @RequiredArgsConstructor
 public class ModuleController {
-
     private final ModuleService moduleService;
     private final QuestionService questionService;
 
-    //========================= Module =========================
+    //============================== "/modules" ==============================
     @GetMapping
-    @PreAuthorize("hasRole('RESEARCHER') or hasRole('PARTICIPANT')")
-    public List<Module> getModules() {
-        return moduleService.getModules();
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN') or hasRole('USER')")
+    public ResponseEntity<List<ModuleResponseDTO>> getModules() {
+        return ResponseEntity.ok(moduleService.getModules());
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('RESEARCHER')")
-    public ResponseEntity<?> createModule(
-            @RequestParam("title") String title,
-            @RequestParam("paragraph") String paragraph,
-            @RequestParam("video") MultipartFile video
-    ) {
-        try {
-            Module saved = moduleService.createModule(title, paragraph, video);
-            return ResponseEntity.ok(saved);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
-        }
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<ModuleResponseDTO> createModule(@ModelAttribute ModuleFormDTO formData) throws IOException {
+        return ResponseEntity.ok(moduleService.createModule(formData));
     }
 
-    //========================= Module Question =========================
-    @GetMapping("/{moduleId}/questions")
-    @PreAuthorize("hasRole('RESEARCHER') or hasRole('PARTICIPANT')")
+    //============================== "/modules/{id}" ==============================
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<Void> deleteModuleById(@PathVariable Long id) {
+        boolean deleted = moduleService.deleteModuleById(id);
+        return deleted
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
+    }
+
+    //============================== "/modules/{id}/questions" ==============================
+    @GetMapping("/{id}/questions")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN') or hasRole('USER')")
     public ResponseEntity<?> getQuestionsByModule(
-            @PathVariable Long moduleId,
+            @PathVariable Long id,
             Authentication authentication
     ) {
-        List<QuestionReadDTO> result = questionService.getQuestionsByModule(moduleId, authentication.getName());
+        List<QuestionReadDTO> result = questionService.getQuestionsByModule(id, authentication.getName());
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{moduleId}/questions")
-    @PreAuthorize("hasRole('RESEARCHER')")
+    @PostMapping("/{id}/questions")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> createQuestion(@RequestBody QuestionCreateDTO dto) {
         QuestionReadDTO saved = questionService.createQuestion(dto);
         return ResponseEntity.ok(saved);

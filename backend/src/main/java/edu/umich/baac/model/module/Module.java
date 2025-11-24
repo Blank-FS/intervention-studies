@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "module")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Module {
@@ -24,7 +24,7 @@ public class Module {
     @Column(length = 5000)
     private String paragraph;
 
-    private String videoUrl;
+    private String videoPath;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

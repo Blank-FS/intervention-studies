@@ -1,10 +1,3 @@
-export interface Module {
-  id: number;
-  title: string;
-  paragraph: string;
-  videoUrl: string;
-}
-
 export interface Question {
   id: number;
   questionText: string;

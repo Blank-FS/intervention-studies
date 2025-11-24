@@ -25,7 +25,7 @@ const EditableModule = ({
       <Card className="p-6">
         <p>{module.paragraph}</p>
         <video
-          src={`/api/videos/${module.videoUrl}`}
+          src={`/api/videos?path=${module.videoPath}`}
           controls
           className="w-full max-h-96 rounded border"
         />

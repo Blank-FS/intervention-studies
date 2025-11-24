@@ -37,3 +37,4 @@ src/main/resources/certs/*
 data/
 *.env
 *.sh
+uploads/

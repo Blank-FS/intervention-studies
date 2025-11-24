@@ -16,7 +16,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('RESEARCHER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> deleteQuestion(@PathVariable Long id) {
         try {
             questionService.deleteQuestion(id);

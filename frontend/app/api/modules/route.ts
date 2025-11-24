@@ -33,7 +33,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No token" }, { status: 401 });
 
     const formData = await req.formData();
-    console.log(formData);
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/modules`,

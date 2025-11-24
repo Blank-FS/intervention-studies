@@ -3,7 +3,7 @@
 import React from "react";
 import EditableModule from "./EditableModule";
 import InteractiveModule from "./InteractiveModule";
-import { Module } from "@/types/definition";
+import { Module } from "@/lib/types/module";
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil } from "lucide-react";
 import {

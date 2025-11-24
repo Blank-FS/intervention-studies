@@ -49,21 +49,25 @@ export async function middleware(req: NextRequest) {
 
   // Redirect from "/" or "/login" to dashboard
   if (pathname === "/" || pathname.startsWith("/login")) {
-    if (role === "RESEARCHER") {
+    if (role === "ADMIN" || role === "SUPERADMIN") {
       return NextResponse.redirect(new URL("/researcher", req.url));
     }
-    if (role === "PARTICIPANT") {
+    if (role === "USER") {
       return NextResponse.redirect(new URL("/participant", req.url));
     }
   }
 
   // Protect researcher routes
-  if (pathname.startsWith("/researcher") && role !== "RESEARCHER") {
+  if (
+    pathname.startsWith("/researcher") &&
+    role !== "ADMIN" &&
+    role !== "SUPERADMIN"
+  ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   // Protect participant routes
-  if (pathname.startsWith("/participant") && role !== "PARTICIPANT") {
+  if (pathname.startsWith("/participant") && role !== "USER") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 

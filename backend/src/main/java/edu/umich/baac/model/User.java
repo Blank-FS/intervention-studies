@@ -1,23 +1,26 @@
 package edu.umich.baac.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
     @Column(updatable = false, nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -29,7 +32,7 @@ public class User {
     private String prolificId;
 
     @Column(nullable = false)
-    private String role = "PARTICIPANT"; // e.g., "RESEARCHER", "PARTICIPANT"
+    private String role = "USER"; // e.g., "SUPERADMIN", "ADMIN", "USER"
 
     @Column(nullable = false)
     private boolean enabled = false;

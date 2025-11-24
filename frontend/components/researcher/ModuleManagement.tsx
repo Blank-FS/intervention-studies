@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ModuleForm from "./ModuleForm";
-import { Module } from "@/types/definition";
-import ModuleWrapper from "../common/module/ModuleWrapper";
+import ModuleCreateForm from "./actions/ModuleCreateForm";
+import { Module } from "@/lib/types/module";
+import ModuleWrapper from "@/components/common/module/ModuleWrapper";
+import ModuleDeleteForm from "./actions/ModuleDeleteForm";
 
 export default function ModuleManagement() {
   const [modules, setModules] = useState<Module[]>([]);
@@ -23,63 +24,57 @@ export default function ModuleManagement() {
     fetchModules();
   }, []);
 
+  const onModuleCreated = (newModule: Module) => {
+    setModules((prev) => [...prev, newModule]);
+    setSelected(newModule);
+  };
+
+  const onModuleDeleted = (deletedModuleId: number) => {
+    setModules((prev) => prev.filter((m) => m.id !== deletedModuleId));
+    if (selected?.id === deletedModuleId) setSelected(null);
+  };
+
   return (
-    <div className="flex gap-4">
+    <div className="flex items-start gap-4">
       {/* Sidebar */}
-      <Sidebar
-        modules={modules}
-        selected={selected}
-        setSelected={setSelected}
-      />
+      <div className="bg-muted sticky top-4 h-full w-64 overflow-y-auto rounded-lg border-r">
+        <div className="flex items-center justify-between border-b p-4">
+          <h2 className="font-semibold">Modules</h2>
+          <ModuleCreateForm onCreate={onModuleCreated} />
+        </div>
+        <ul>
+          {modules.map((m, idx) => (
+            <li
+              key={m.id}
+              onClick={() => setSelected(m)}
+              className={`hover:bg-muted-foreground cursor-pointer p-4 ${
+                selected?.id === m.id ? "bg-muted-foreground font-bold" : ""
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <p>
+                  {idx + 1}. {m.title}
+                </p>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ModuleDeleteForm
+                    moduleId={m.id}
+                    onDelete={onModuleDeleted}
+                  />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {/* Main content */}
-      <MainContent selected={selected} />
-    </div>
-  );
-}
-
-// Sidebar component
-function Sidebar({
-  modules,
-  selected,
-  setSelected,
-}: {
-  modules: Module[];
-  selected: Module | null;
-  setSelected: (module: Module) => void;
-}) {
-  return (
-    <div className="w-64 bg-muted border-r overflow-y-auto sticky top-4 h-full rounded-lg">
-      <div className="flex justify-between items-center p-4 border-b">
-        <h2 className="font-semibold">Modules</h2>
-        <ModuleForm />
+      <div className="bg-secondary flex-1 overflow-y-auto rounded-lg p-4">
+        {selected ? (
+          <ModuleWrapper module={selected} editable />
+        ) : (
+          <p className="">Select a module from the sidebar</p>
+        )}
       </div>
-      <ul>
-        {modules.map((m) => (
-          <li
-            key={m.id}
-            onClick={() => setSelected(m)}
-            className={`p-4 cursor-pointer hover:bg-muted-foreground ${
-              selected?.id === m.id ? "bg-muted-foreground font-bold" : ""
-            }`}
-          >
-            {m.id}. {m.title}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-// Main content component
-function MainContent({ selected }: { selected: Module | null }) {
-  return (
-    <div className="flex-1 p-4 overflow-y-auto bg-secondary rounded-lg">
-      {selected ? (
-        <ModuleWrapper module={selected} editable />
-      ) : (
-        <p className="">Select a module from the sidebar</p>
-      )}
     </div>
   );
 }

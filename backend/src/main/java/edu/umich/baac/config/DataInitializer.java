@@ -17,6 +17,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Configuration
 public class DataInitializer {
@@ -25,23 +30,39 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
+            if (userRepository.findByEmail("superadmin@example.com").isEmpty()) {
+                User superadmin = User.builder()
+                        .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                        .email("superadmin@example.com")
+                        .password(passwordEncoder.encode("password"))
+                        .prolificId("111111111111111111111111")
+                        .role("SUPERADMIN")
+                        .enabled(true)
+                        .build();
+                userRepository.save(superadmin);
+            }
+
             if (userRepository.findByEmail("admin@example.com").isEmpty()) {
-                User admin = new User();
-                admin.setEmail("admin@example.com");
-                admin.setPassword(passwordEncoder.encode("password"));
-                admin.setProlificId("000000000000000000000000");
-                admin.setRole("RESEARCHER");
-                admin.setEnabled(true);
+                User admin = User.builder()
+                        .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                        .email("admin@example.com")
+                        .password(passwordEncoder.encode("password"))
+                        .prolificId("000000000000000000000000")
+                        .role("ADMIN")
+                        .enabled(true)
+                        .build();
                 userRepository.save(admin);
             }
 
             if (userRepository.findByEmail("participant@example.com").isEmpty()) {
-                User participant = new User();
-                participant.setEmail("participant@example.com");
-                participant.setPassword(passwordEncoder.encode("password"));
-                participant.setProlificId("AAAAAAAAAAAAAAAAAAAAAAAA");
-                participant.setRole("PARTICIPANT");
-                participant.setEnabled(true);
+                User participant = User.builder()
+                        .createdAt(LocalDateTime.now(ZoneOffset.UTC))
+                        .email("participant@example.com")
+                        .password(passwordEncoder.encode("password"))
+                        .prolificId("AAAAAAAAAAAAAAAAAAAAAAAA")
+                        .role("USER")
+                        .enabled(true)
+                        .build();
                 userRepository.save(participant);
             }
         };
@@ -51,51 +72,46 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initModules(ModuleRepository moduleRepository, QuestionRepository questionRepository, OptionRepository optionRepository) {
         return args -> {
-            String videoFileName = "sample-10s.mp4";
-            String localDir = "data/videos";
-            String remoteUrl = "https://download.samplelib.com/mp4/sample-10s.mp4";
+            String videoDownloadUrl = "https://download.samplelib.com/mp4/sample-10s.mp4";
 
-            File dir = new File(localDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
+            Path uploadDir = Paths.get("uploads/videos");
+            Files.createDirectories(uploadDir);
 
-            File localVideoFile = new File(dir, videoFileName);
+            File localVideoFile = uploadDir.resolve("sample-10s.mp4").toFile();
 
-            // Download the sample MP4 file if it doesn't exist locally
+            // Download sample video if it does not exist
             if (!localVideoFile.exists()) {
-                System.out.println("Video file not found locally. Downloading from: " + remoteUrl);
-                try (InputStream in = new URL(remoteUrl).openStream();
+                System.out.println("Video file not found locally. Downloading from: " + videoDownloadUrl);
+                try (InputStream in = new URL(videoDownloadUrl).openStream();
                      FileOutputStream out = new FileOutputStream(localVideoFile)) {
 
                     byte[] buffer = new byte[4096];
                     int bytesRead;
-                    while ((bytesRead = in.read(buffer)) != -1) {
+                    while ((bytesRead = in.read(buffer)) != -1)
                         out.write(buffer, 0, bytesRead);
-                    }
 
                     System.out.println("Video downloaded to: " + localVideoFile.getAbsolutePath());
                 } catch (Exception e) {
                     System.err.println("Failed to download video: " + e.getMessage());
                 }
-            } else {
-                System.out.println("Video already exists: " + localVideoFile.getAbsolutePath());
             }
 
-            // Create and save module to database
-            Module module = new Module();
-            module.setTitle("Test Module");
-            module.setParagraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-            module.setVideoUrl(videoFileName);
+            // Create and save sample module
+            Module module = Module.builder()
+                    .title("Sample Module")
+                    .paragraph("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+                    .videoPath("uploads/videos/sample-10s.mp4")
+                    .build();
             Module savedModule = moduleRepository.save(module);
 
-            createQuestion1(moduleRepository, questionRepository, optionRepository, savedModule);
-            createQuestion2(moduleRepository, questionRepository, optionRepository, savedModule);
+            // Create and save sample questions
+            createQuestion1(questionRepository, optionRepository, savedModule);
+            createQuestion2(questionRepository, optionRepository, savedModule);
 
         };
     }
 
-    private void createQuestion1(ModuleRepository moduleRepository, QuestionRepository questionRepository, OptionRepository optionRepository, Module module) {
+    private void createQuestion1(QuestionRepository questionRepository, OptionRepository optionRepository, Module module) {
         // Create amd save question to database
         Question question = new Question();
         question.setModule(module);
@@ -128,7 +144,7 @@ public class DataInitializer {
         questionRepository.save(savedQuestion);
     }
 
-    private void createQuestion2(ModuleRepository moduleRepository, QuestionRepository questionRepository, OptionRepository optionRepository, Module module) {
+    private void createQuestion2(QuestionRepository questionRepository, OptionRepository optionRepository, Module module) {
         // Create amd save question to database
         Question question = new Question();
         question.setModule(module);

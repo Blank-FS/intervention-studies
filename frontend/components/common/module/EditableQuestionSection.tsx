@@ -1,5 +1,5 @@
 "use client";
-import QuestionCreateForm from "@/components/researcher/QuestionCreateForm";
+import QuestionCreateForm from "@/components/researcher/actions/QuestionCreateForm";
 import { Question } from "@/types/definition";
 import React, { useEffect, useState } from "react";
 import EditableQuestionItem from "./EditableQuestionItem";

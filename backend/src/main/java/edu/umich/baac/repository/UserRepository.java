@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByProlificId(String prolificId);
     Optional<User> findByEmailAndVerificationCode(String email, String code);
-    List<User> findAllByEnabledFalseAndCreatedAtBefore(Instant cutoff);
+    List<User> findAllByEnabledFalseAndCreatedAtBefore(LocalDateTime cutoff);
 }
 

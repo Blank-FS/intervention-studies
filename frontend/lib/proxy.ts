@@ -19,6 +19,11 @@ export async function proxyRequest(req: NextRequest, targetUrl: string) {
     });
 
     const data = await response.text();
+
+    const noBodyStatusCodes = [204, 205, 304];
+    if (noBodyStatusCodes.includes(response.status))
+      return new NextResponse(null, { status: response.status });
+
     return new NextResponse(data, { status: response.status });
   } catch (err) {
     console.error("Proxy error:", err);

@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasRole('RESEARCHER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public List<User> getAllUsers() {
         return userService.getUsers();
     }

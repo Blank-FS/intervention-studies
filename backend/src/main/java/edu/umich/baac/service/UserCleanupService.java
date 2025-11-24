@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class UserCleanupService {
 
     @Scheduled(fixedRate = 60_000) // run every minute
     public void removeExpiredUsers() {
-        Instant cutoff = Instant.now().minus(15, ChronoUnit.MINUTES);
+        LocalDateTime cutoff = LocalDateTime.now(ZoneOffset.UTC).minusMinutes(15);
         List<User> expiredUsers = userRepository.findAllByEnabledFalseAndCreatedAtBefore(cutoff);
 
         if (!expiredUsers.isEmpty()) {
