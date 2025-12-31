@@ -6,22 +6,15 @@ import {
   localDateTimeArrayToUTCDate,
 } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import FluStudyData from "./FluStudyData";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const getColumnDef = (): ColumnDef<User>[] => [
+export const getUserColumnDef = (): ColumnDef<User>[] => [
   {
     accessorKey: "id",
     header: "User ID",
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-    cell: ({ getValue }) => {
-      const date = localDateTimeArrayToUTCDate(getValue<number[]>());
-      return formatToLongLocalStringWithTZ(date);
-    },
   },
   {
     accessorKey: "email",
@@ -30,6 +23,33 @@ export const getColumnDef = (): ColumnDef<User>[] => [
   {
     accessorKey: "prolificId",
     header: "Prolific ID",
+  },
+  {
+    accessorKey: "role",
+    header: "Role",
+  },
+  {
+    accessorKey: "enabled",
+    header: "Enabled",
+  },
+  {
+    accessorKey: "studyData",
+    header: "Study Data",
+    cell: ({ row }) => {
+      const id = row.original.id;
+      return <FluStudyData id={id} />;
+    },
+  },
+];
+
+export const getAdminColumnDef = (): ColumnDef<User>[] => [
+  {
+    accessorKey: "id",
+    header: "User ID",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
   },
   {
     accessorKey: "role",

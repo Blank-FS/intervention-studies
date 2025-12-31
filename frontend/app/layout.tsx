@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "./providers";
+import Header from "@/components/header/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Providers>{children}</Providers>
+          <Providers>
+            <div className="relative flex h-screen flex-col">
+              <img
+                src="/images/background.webp"
+                alt="Background"
+                className="absolute inset-0 -z-10 h-full w-full object-cover blur-xs brightness-30"
+              />
+              <Header />
+              {children}
+            </div>
+          </Providers>
           <Toaster richColors position="top-center" />
         </ThemeProvider>
       </body>

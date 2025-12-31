@@ -7,8 +7,13 @@ export default function HomePage() {
   const router = useRouter();
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen">
-      <Button onClick={() => router.push("/auth")}>Login</Button>
+    <main className="flex flex-1 flex-col items-center justify-center">
+      <Button
+        className="bg-umich-maize text-umich-blue hover:bg-umich-maize/80 w-32 font-bold"
+        onClick={() => router.push("/auth")}
+      >
+        Login
+      </Button>
     </main>
   );
 }

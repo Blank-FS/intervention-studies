@@ -10,7 +10,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex h-full flex-1 items-center justify-center">
       {step === "login" && <LoginForm toggleForm={() => setStep("register")} />}
       {step === "register" && (
         <RegisterForm

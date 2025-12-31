@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { Mail } from "lucide-react";
+import { Spinner } from "../ui/spinner";
+import { useAuth } from "../auth-provider";
 
 interface VerifyCodeFormProps {
   email: string;
 }
 
 export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
+  const { user, refresh } = useAuth();
   const router = useRouter();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +33,7 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, code }),
-        }
+        },
       );
 
       if (res.ok) {
@@ -41,6 +46,7 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
         });
         if (!cookieRes.ok) throw new Error("Failed to set token cookie");
 
+        await refresh();
         // Redirect to participant home
         router.push("/participant");
       } else {
@@ -56,17 +62,28 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
   };
 
   return (
-    <Card className="p-8 w-full max-w-md">
-      <form onSubmit={handleVerify}>
-        <h2 className="text-lg font-semibold mb-4">Enter Verification Code</h2>
-        <p className="mb-3 text-sm text-gray-600">
-          A code has been sent to <strong>{email}</strong>. Please enter it
-          below.
+    <Card className="bg-umich-blue/70 w-full max-w-sm p-4">
+      <form
+        onSubmit={handleVerify}
+        className="flex flex-col items-center gap-4"
+      >
+        <div className="border-umich-blue bg-umich-maize *:[svg]:stroke-umich-blue rounded-full border p-4">
+          <Mail className="size-12" />
+        </div>
+        <h2 className="text-center text-2xl font-bold">
+          Enter Verification Code
+        </h2>
+        <Separator />
+        <p className="text-sm">
+          A code has been sent to{" "}
+          <i className="text-umich-maize font-bold">{email}</i>. Please enter it
+          below. If you don't see it, you may need to{" "}
+          <i className="text-umich-maize font-bold">check your spam</i> folder.
         </p>
 
-        {error && <div className="mb-3 text-red-600">{error}</div>}
+        {error && <div className="text-red-600">{error}</div>}
 
-        <label className="block mb-4">
+        <label className="block w-full">
           <span>Verification Code</span>
           <Input
             type="text"
@@ -80,9 +97,9 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full disabled:opacity-50"
+          className="bg-umich-maize text-umich-blue hover:bg-umich-maize/80 w-full font-bold disabled:opacity-50"
         >
-          {loading ? "Verifying..." : "Verify"}
+          {loading ? <Spinner /> : "Verify"}
         </Button>
       </form>
     </Card>

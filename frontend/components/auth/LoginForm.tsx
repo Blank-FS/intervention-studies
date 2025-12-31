@@ -6,6 +6,10 @@ import Link from "next/link";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { User } from "lucide-react";
+import { Separator } from "../ui/separator";
+import { useAuth } from "../auth-provider";
+import { Spinner } from "../ui/spinner";
 
 // Helper: decode JWT and return role
 function getRoleFromToken(token: string) {
@@ -19,6 +23,7 @@ function getRoleFromToken(token: string) {
 }
 
 export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
+  const { user, refresh } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -52,6 +57,8 @@ export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
       // Get role from JWT and redirect
       const role = getRoleFromToken(data.token);
 
+      await refresh();
+
       if (role === "RESEARCHER") {
         router.push("/researcher");
       } else if (role === "PARTICIPANT") {
@@ -67,12 +74,16 @@ export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
   };
 
   return (
-    <Card className="p-8 w-full max-w-md">
-      <form onSubmit={handleLogin}>
-        <h2 className="text-lg font-semibold mb-4">Login</h2>
-        {error && <div className="mb-3 text-red-600">{error}</div>}
+    <Card className="bg-umich-blue/70 w-full max-w-sm p-4">
+      <form onSubmit={handleLogin} className="flex flex-col items-center gap-4">
+        <div className="border-umich-blue bg-umich-maize *:[svg]:stroke-umich-blue rounded-full border p-4">
+          <User className="size-12" />
+        </div>
+        <h2 className="text-center text-2xl font-bold">User Login</h2>
+        <Separator />
+        {error && <div className="text-red-600">{error}</div>}
 
-        <label className="block mb-2">
+        <label className="block w-full">
           <span>Email</span>
           <Input
             type="text"
@@ -83,7 +94,7 @@ export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
           />
         </label>
 
-        <label className="block mb-4">
+        <label className="mb-2 block w-full">
           <span>Password</span>
           <Input
             type="password"
@@ -98,12 +109,12 @@ export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full disabled:opacity-50"
+          className="bg-umich-maize text-umich-blue hover:bg-umich-maize/80 w-full font-bold disabled:opacity-50"
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? <Spinner /> : "Login"}
         </Button>
 
-        <p className="text-sm mt-4 text-center">
+        <p className="text-center text-sm">
           Don’t have an account?{" "}
           <button
             type="button"

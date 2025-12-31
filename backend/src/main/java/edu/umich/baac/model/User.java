@@ -1,8 +1,8 @@
 package edu.umich.baac.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -28,13 +28,15 @@ public class User {
     @Column(nullable = false)
     private String password; // stored hashed
 
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String prolificId;
 
     @Column(nullable = false)
+    @Builder.Default
     private String role = "USER"; // e.g., "SUPERADMIN", "ADMIN", "USER"
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean enabled = false;
 
     @Column(length = 32)
@@ -42,4 +44,8 @@ public class User {
 
     @Column
     private Instant verificationExpiry;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private UserFluStudy userFluStudy;
 }

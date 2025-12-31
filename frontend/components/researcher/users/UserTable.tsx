@@ -34,12 +34,12 @@ const CompanyTable = <TData, TValue>({
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>
-        <TableHeader className="bg-muted">
+        <TableHeader className="bg-umich-blue/70">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-umich-maize">
                     {header.isPlaceholder
                       ? null
                       : flexRender(

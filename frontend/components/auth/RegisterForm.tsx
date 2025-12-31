@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { Spinner } from "../ui/spinner";
 
 interface RegisterFormProps {
   onRegistered: (email: string) => void;
@@ -39,7 +41,7 @@ export default function RegisterForm({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, prolificId, password }),
-        }
+        },
       );
 
       if (res.ok) {
@@ -58,12 +60,16 @@ export default function RegisterForm({
   };
 
   return (
-    <Card className="p-8 w-full max-w-md">
-      <form onSubmit={handleSubmit}>
-        <h2 className="text-lg font-semibold mb-4">Create an account</h2>
-        {error && <div className="mb-3 text-red-600">{error}</div>}
+    <Card className="bg-umich-blue/70 w-full max-w-sm p-4">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center gap-4"
+      >
+        <h2 className="text-center text-2xl font-bold">Create an account</h2>
+        <Separator />
+        {error && <div className="text-red-600">{error}</div>}
 
-        <label className="block mb-2">
+        <label className="block w-full">
           <span>Email</span>
           <Input
             type="email"
@@ -74,7 +80,7 @@ export default function RegisterForm({
           />
         </label>
 
-        <label className="block mb-2">
+        <label className="block w-full">
           <span>Prolific ID</span>
           <Input
             type="text"
@@ -85,7 +91,7 @@ export default function RegisterForm({
           />
         </label>
 
-        <label className="block mb-2">
+        <label className="block w-full">
           <span>Password</span>
           <Input
             type="password"
@@ -97,7 +103,7 @@ export default function RegisterForm({
           />
         </label>
 
-        <label className="block mb-4">
+        <label className="mb-2 block w-full">
           <span>Confirm Password</span>
           <Input
             type="password"
@@ -112,11 +118,11 @@ export default function RegisterForm({
         <Button
           type="submit"
           disabled={loading}
-          className="w-full disabled:opacity-50"
+          className="bg-umich-maize text-umich-blue hover:bg-umich-maize/80 w-full font-bold disabled:opacity-50"
         >
-          {loading ? "Submitting..." : "Register"}
+          {loading ? <Spinner /> : "Register"}
         </Button>
-        <p className="text-sm mt-4 text-center">
+        <p className="text-center text-sm">
           Already have an account?{" "}
           <button
             type="button"
