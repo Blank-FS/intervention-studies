@@ -24,6 +24,15 @@ public class UserFluStudy {
     @Column(length = 50000)
     private String csvData;
 
+    @Column
+    private Integer age;
+
+    @Column
+    private Integer baselineVaxIntent;
+
+    @Column
+    private Integer postVaxIntent;
+
     @OneToOne
     private User user;
 }

@@ -14,9 +14,9 @@ export default function ResearcherLayout({
   const isActive = (path: string) => pathname == path;
 
   return (
-    <main className="flex-1 bg-[#141414]/50 p-6">
+    <main className="min-h-0 flex-1 bg-[#141414]/50 p-6">
       {/* Tab Controls */}
-      <div>
+      <div className="flex h-full min-h-0 w-full flex-col">
         <div className="flex border-b border-white">
           <Link
             href="/researcher"
@@ -43,20 +43,20 @@ export default function ResearcherLayout({
           </Link>
 
           <Link
-            href="/researcher/modules"
+            href="/researcher/flu-study"
             className={cn(
               `w-36 rounded-tr-lg border p-2 text-center font-bold`,
-              isActive("/researcher/modules")
+              isActive("/researcher/flu-study")
                 ? "bg-umich-maize text-umich-blue"
                 : "bg-umich-blue/50 text-umich-maize",
             )}
           >
-            Modules
+            Flu Study
           </Link>
         </div>
 
         {/* Tab Content */}
-        <div className="py-4">{children}</div>
+        <div className="flex-1 overflow-y-auto p-4">{children}</div>
       </div>
     </main>
   );

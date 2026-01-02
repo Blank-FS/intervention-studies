@@ -1,9 +1,11 @@
 package edu.umich.baac.config;
 
+import edu.umich.baac.model.Study;
 import edu.umich.baac.model.User;
 import edu.umich.baac.model.module.Module;
 import edu.umich.baac.model.module.Option;
 import edu.umich.baac.model.module.Question;
+import edu.umich.baac.repository.StudyRepository;
 import edu.umich.baac.repository.UserRepository;
 import edu.umich.baac.repository.module.ModuleRepository;
 import edu.umich.baac.repository.module.OptionRepository;
@@ -64,6 +66,20 @@ public class DataInitializer {
                         .enabled(true)
                         .build();
                 userRepository.save(participant);
+            }
+        };
+    }
+
+    // Add sample users to database for testing
+    @Bean
+    CommandLineRunner initStudies(StudyRepository studyRepository) {
+        return args -> {
+            if (studyRepository.findByName("flu-study").isEmpty()) {
+                Study fluStudy = Study.builder()
+                        .name("flu-study")
+                        .active(true)
+                        .build();
+                studyRepository.save(fluStudy);
             }
         };
     }

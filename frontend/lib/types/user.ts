@@ -3,6 +3,6 @@ export interface User {
   createdAt: number[];
   email: string;
   prolificId: string;
-  role: string;
+  role: "USER" | "ADMIN" | "SUPERADMIN";
   enabled: boolean;
 }

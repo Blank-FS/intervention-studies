@@ -26,3 +26,21 @@ export function formatToLongLocalStringWithTZ(date: Date): string {
   };
   return new Intl.DateTimeFormat("en-US", options).format(date);
 }
+
+export function convertToCSV<T extends Record<string, any>>(data: T[]) {
+  if (!data.length) return "";
+
+  // Collect all unique keys across all rows
+  const headers = Array.from(new Set(data.flatMap((row) => Object.keys(row))));
+
+  const rows = data.map((row) =>
+    headers
+      .map((header) => {
+        const value = row[header];
+        return `"${String(value ?? "").replace(/"/g, '""')}"`;
+      })
+      .join(","),
+  );
+
+  return [headers.join(","), ...rows].join("\n");
+}

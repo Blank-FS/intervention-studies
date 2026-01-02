@@ -75,4 +75,27 @@ public class UserService {
     public List<User> getUsers() {
         return userRepo.findAll();
     }
+
+    public User getUserById(Long id) {
+        return userRepo.findById(id).orElse(null);
+    }
+
+    public void transferSuperadmin(String currentUserEmail, User targetUser, String newRole) {
+        // Ensure no two superadmins exist at the same time.
+        User currentSuperadmin = userRepo.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new IllegalStateException("Current superadmin not found"));
+
+        // Demote the current superadmin to admin
+        currentSuperadmin.setRole("ADMIN");
+        userRepo.save(currentSuperadmin);
+
+        // Promote the target user to superadmin
+        targetUser.setRole("SUPERADMIN");
+        userRepo.save(targetUser);
+    }
+
+    public void changeUserRole(User user, String newRole) {
+        user.setRole(newRole);  // Update the role
+        userRepo.save(user);  // Save the updated user to the database
+    }
 }

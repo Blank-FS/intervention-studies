@@ -1,7 +1,7 @@
 // app/participant/page.tsx
 "use client";
 
-import FluStudyCard from "@/components/participant/FluStudyCard";
+import FluStudyCard from "@/components/common/FluStudyCard";
 import ModuleSection from "@/components/participant/ModuleSection";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";

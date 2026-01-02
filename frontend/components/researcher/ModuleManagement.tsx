@@ -37,7 +37,7 @@ export default function ModuleManagement() {
   return (
     <div className="flex items-start gap-4">
       {/* Sidebar */}
-      <div className="bg-muted sticky top-4 h-full w-64 overflow-y-auto rounded-lg border-r">
+      <div className="bg-muted sticky top-0 h-full w-64 overflow-y-auto rounded-lg border-r">
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="font-semibold">Modules</h2>
           <ModuleCreateForm onCreate={onModuleCreated} />

@@ -32,6 +32,12 @@ public class UserFluStudyController {
         return ResponseEntity.ok(Map.of("message", "Response saved"));
     }
 
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> getAllStudyResponses() {
+        return ResponseEntity.ok(Map.of("responses", userFluStudyService.getAllResponses()));
+    }
+
     @GetMapping("/status")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getUserStudyResponse(
@@ -39,8 +45,8 @@ public class UserFluStudyController {
     ) {
         UserFluStudy response = userFluStudyService.getResponse(authentication.getName());
         if(response==null)
-            return new ResponseEntity<>(Map.of("message", "Bad request"), HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(Map.of("message", "Success", "completed", response.getCompleted()));
+            return ResponseEntity.ok(Map.of("message", "Success", "completed", false));
+        return ResponseEntity.ok(Map.of("message", "Success", "completed", true));
     }
 
     @GetMapping("/data")

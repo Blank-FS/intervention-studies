@@ -6,12 +6,18 @@ import {
   localDateTimeArrayToUTCDate,
 } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import FluStudyData from "./FluStudyData";
+import { RoleAction, RoleDropdownCell } from "./RoleDropdownCell";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const getUserColumnDef = (): ColumnDef<User>[] => [
+export const getUserColumnDef = ({
+  isSuperadmin,
+  onRoleAction,
+}: {
+  isSuperadmin: boolean;
+  onRoleAction: (userId: number, action: RoleAction) => void;
+}): ColumnDef<User>[] => [
   {
     accessorKey: "id",
     header: "User ID",
@@ -27,22 +33,27 @@ export const getUserColumnDef = (): ColumnDef<User>[] => [
   {
     accessorKey: "role",
     header: "Role",
+    cell: ({ row }) => (
+      <RoleDropdownCell
+        target={row.original}
+        isSuperadmin={isSuperadmin}
+        onRoleAction={onRoleAction}
+      />
+    ),
   },
   {
     accessorKey: "enabled",
     header: "Enabled",
   },
-  {
-    accessorKey: "studyData",
-    header: "Study Data",
-    cell: ({ row }) => {
-      const id = row.original.id;
-      return <FluStudyData id={id} />;
-    },
-  },
 ];
 
-export const getAdminColumnDef = (): ColumnDef<User>[] => [
+export const getAdminColumnDef = ({
+  isSuperadmin,
+  onRoleAction,
+}: {
+  isSuperadmin: boolean;
+  onRoleAction: (userId: number, action: RoleAction) => void;
+}): ColumnDef<User>[] => [
   {
     accessorKey: "id",
     header: "User ID",
@@ -54,6 +65,13 @@ export const getAdminColumnDef = (): ColumnDef<User>[] => [
   {
     accessorKey: "role",
     header: "Role",
+    cell: ({ row }) => (
+      <RoleDropdownCell
+        target={row.original}
+        isSuperadmin={isSuperadmin}
+        onRoleAction={onRoleAction}
+      />
+    ),
   },
   {
     accessorKey: "enabled",
