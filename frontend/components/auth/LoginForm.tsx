@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -10,16 +9,12 @@ import { User } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { useAuth } from "../auth-provider";
 import { Spinner } from "../ui/spinner";
+import { getLoggedInUserFromJWT } from "@/lib/auth";
 
 // Helper: decode JWT and return role
-function getRoleFromToken(token: string) {
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.role;
-  } catch (err) {
-    console.error("Failed to parse JWT:", err);
-    return null;
-  }
+async function getRoleFromToken(token: string) {
+  const loggedInUser = await getLoggedInUserFromJWT(token);
+  return loggedInUser?.role || "";
 }
 
 export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
@@ -35,7 +30,7 @@ export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/token`, {
+      const res = await fetch(`/api/proxy?path=/auth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -55,13 +50,12 @@ export default function LoginForm({ toggleForm }: { toggleForm: () => void }) {
       if (!cookieRes.ok) throw new Error("Failed to set token cookie");
 
       // Get role from JWT and redirect
-      const role = getRoleFromToken(data.token);
+      const loggedInUser = await refresh();
+      const role = loggedInUser?.role || "";
 
-      await refresh();
-
-      if (role === "RESEARCHER") {
+      if (role === "ADMIN" || role === "SUPERADMIN") {
         router.push("/researcher");
-      } else if (role === "PARTICIPANT") {
+      } else if (role === "USER") {
         router.push("/participant");
       } else {
         router.push("/");

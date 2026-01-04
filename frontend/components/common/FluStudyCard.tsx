@@ -94,7 +94,7 @@ const FluStudyCard = ({
         ) : (
           /* PARTICIPANT – START */
           <Link href="/participant/flu-study">
-            <Button className="bg-umich-maize text-umich-blue font-bold">
+            <Button className="bg-umich-maize text-umich-blue hover:bg-umich-maize/80 font-bold">
               Start
             </Button>
           </Link>

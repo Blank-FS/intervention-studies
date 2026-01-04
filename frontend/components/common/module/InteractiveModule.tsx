@@ -1,7 +1,7 @@
 "use client";
 
-import { Module, ModuleProgress, ModuleProgressType } from "@/lib/types/module";
-import React, { useEffect, useState } from "react";
+import { Module, ModuleProgressType } from "@/lib/types/module";
+import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Card } from "@/components/ui/card";
 import InteractiveQuestionSection from "@/components/common/module/InteractiveQuestionSection";

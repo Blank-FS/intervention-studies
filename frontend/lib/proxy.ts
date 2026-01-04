@@ -5,12 +5,15 @@ import { getTokenFromCookies } from "./getToken";
 export async function proxyRequest(req: NextRequest, targetUrl: string) {
   try {
     const token = getTokenFromCookies(req);
-    if (!token)
+    const authRequest = targetUrl.startsWith(
+      `${process.env.INTERNAL_API_URL}/auth`,
+    );
+    if (!authRequest && !token)
       return NextResponse.json({ error: "No token" }, { status: 401 });
 
     const headers = new Headers(req.headers);
     headers.set("Content-Type", "application/json");
-    headers.set("Authorization", `Bearer ${token}`);
+    if (!authRequest) headers.set("Authorization", `Bearer ${token}`);
 
     const response = await fetch(targetUrl, {
       method: req.method,

@@ -1,40 +1,7 @@
+// lib/auth.ts
+
 import { importSPKI, jwtVerify } from "jose";
 import { NextRequest } from "next/server";
-
-// lib/auth.ts
-export async function resendVerificationEmail(email: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/identity/auth/verify/resend`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    },
-  );
-
-  // Try to parse JSON if backend returns it
-  let data: any = null;
-  const contentType = res.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
-    data = await res.json().catch(() => null);
-  } else {
-    data = await res.text().catch(() => null);
-  }
-
-  if (!res.ok) {
-    const message =
-      (data && typeof data === "object" && (data.message || data.error)) ||
-      (typeof data === "string" && data) ||
-      `Failed to resend (HTTP ${res.status})`;
-
-    const err: any = new Error(message);
-    err.status = res.status;
-    err.data = data;
-    throw err;
-  }
-
-  return data;
-}
 
 export type JwtPayload = {
   sub: string;

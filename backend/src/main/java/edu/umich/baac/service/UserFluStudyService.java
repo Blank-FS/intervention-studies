@@ -5,33 +5,25 @@ import com.opencsv.exceptions.CsvValidationException;
 import edu.umich.baac.dto.FluStudyResponseDTO;
 import edu.umich.baac.model.User;
 import edu.umich.baac.model.UserFluStudy;
-import edu.umich.baac.model.module.Option;
-import edu.umich.baac.model.module.Question;
-import edu.umich.baac.model.module.Response;
 import edu.umich.baac.repository.UserFluStudyRepository;
 import edu.umich.baac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserFluStudyService {
     private final UserFluStudyRepository userFluStudyRepo;
     private final UserRepository userRepo;
 
+    @Transactional
     public boolean saveResponse(String email, String csvData){
         // 1. Get user
         User currentUser = userRepo.findByEmail(email).orElse(null);
@@ -99,6 +91,22 @@ public class UserFluStudyService {
         if(response != null && response.getCompleted()==false)
             return null;
         return response;
+    }
+
+    @Transactional
+    public boolean deleteResponseByUserId(Long id){
+        // 1. Get user
+        User user = userRepo.findById(id).orElse(null);
+        if(user==null){
+            return false;
+        }
+
+        // 2. Delete response
+        if (user.getUserFluStudy() != null) {
+            user.setUserFluStudy(null);  // orphanRemoval triggers DELETE
+            return true;
+        }
+        return false;
     }
 
     public List<FluStudyResponseDTO> getAllResponses(){

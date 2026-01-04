@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   const token = getTokenFromCookies(req);
   if (!token) return NextResponse.json({ error: "No token" }, { status: 401 });
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/modules`, {
+  const res = await fetch(`${process.env.INTERNAL_API_URL}/api/modules`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     const errorText = await res.text();
     return NextResponse.json(
       { error: errorText || `Backend returned ${res.status}` },
-      { status: res.status }
+      { status: res.status },
     );
   }
 
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const formData = await req.formData();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/modules`,
+      `${process.env.INTERNAL_API_URL}/api/modules`,
       {
         method: "POST",
         body: formData,
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           Authorization: `Bearer ${token}`,
           type: "multipart/form-data",
         },
-      }
+      },
     );
 
     const contentType = response.headers.get("content-type") || "";
@@ -54,8 +54,9 @@ export async function POST(req: Request) {
       const text = await response.text();
       return NextResponse.json({ message: text }, { status: response.status });
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

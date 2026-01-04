@@ -115,7 +115,7 @@ The backend will start at: `http://localhost:8080`
 3. **Configure environment variables (create .env file in frontend root folder)**
 
    ```
-    NEXT_PUBLIC_API_URL=http://localhost:8080
+    INTERNAL_API_URL=http://localhost:8080
     # public.pem created in backend
     JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----...-----END PUBLIC KEY-----"
    ```

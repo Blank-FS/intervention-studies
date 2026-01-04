@@ -1,7 +1,7 @@
 import QuestionDeleteForm from "@/components/researcher/actions/QuestionDeleteForm";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Question } from "@/types/definition";
+import { Question } from "@/lib/types/question";
 
 const EditableQuestionItem = ({
   q,
@@ -19,7 +19,7 @@ const EditableQuestionItem = ({
           <span>
             {idx + 1}. {q.questionText}
           </span>
-          <div className="flex gap-4 items-center">
+          <div className="flex items-center gap-4">
             <Badge variant="default">Question ID: {q.id}</Badge>
             <QuestionDeleteForm questionId={q.id} onDeleted={onDeleted} />
           </div>
@@ -31,7 +31,7 @@ const EditableQuestionItem = ({
           {q.options.map((option) => (
             <li
               key={option.id}
-              className={`flex items-center justify-between gap-2 p-2 rounded-md bg-muted ${
+              className={`bg-muted flex items-center justify-between gap-2 rounded-md p-2 ${
                 option.id === q.correctOptionId && "border border-green-400"
               }`}
             >

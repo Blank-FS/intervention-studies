@@ -57,4 +57,15 @@ public class UserFluStudyController {
         UserFluStudy response = userFluStudyService.getResponseById(id);
         return ResponseEntity.ok(Map.of("message", "Success", "studyData", response != null ? response.getCsvData(): ""));
     }
+
+    @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> deleteUserStudyResponseById(
+            @RequestParam("userId") Long userId
+    ) {
+        boolean deleted = userFluStudyService.deleteResponseByUserId(userId);
+        if(!deleted)
+            return new ResponseEntity<>(Map.of("message", "Failed to delete response"), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(Map.of("message", "Successfully deleted response associated with user id " + userId));
+    }
 }

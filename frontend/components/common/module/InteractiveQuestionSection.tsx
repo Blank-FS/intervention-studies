@@ -1,5 +1,5 @@
 "use client";
-import { Question } from "@/types/definition";
+import { Question } from "@/lib/types/question";
 import React, { useEffect, useState } from "react";
 import InteractiveQuestionItem from "./InteractiveQuestionItem";
 

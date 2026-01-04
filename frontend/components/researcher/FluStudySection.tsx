@@ -5,7 +5,7 @@ import CustomTable from "../common/CustomTable";
 import { FluStudyResponse, getColumnDef } from "./flu-study/columns";
 import { Spinner } from "../ui/spinner";
 import { Button } from "../ui/button";
-import { Download, DownloadIcon } from "lucide-react";
+import { DownloadIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { convertToCSV } from "@/lib/utils";
@@ -33,7 +33,7 @@ const FluStudySection = () => {
     fetchResponses();
   }, []);
 
-  const responseColumns = getColumnDef();
+  const responseColumns = getColumnDef(fetchResponses);
 
   function downloadCSV(csv: string, filename: string) {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });

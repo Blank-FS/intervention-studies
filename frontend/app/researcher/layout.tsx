@@ -14,7 +14,7 @@ export default function ResearcherLayout({
   const isActive = (path: string) => pathname == path;
 
   return (
-    <main className="min-h-0 flex-1 bg-[#141414]/50 p-6">
+    <main className="min-h-0 flex-1 bg-[#141414]/70 p-6">
       {/* Tab Controls */}
       <div className="flex h-full min-h-0 w-full flex-col">
         <div className="flex border-b border-white">

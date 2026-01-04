@@ -2,7 +2,7 @@
 import { getTokenFromCookies } from "@/lib/getToken";
 import { NextResponse } from "next/server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const BASE_URL = process.env.INTERNAL_API_URL || "";
 
 export async function POST(req: Request) {
   try {
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       console.error("Backend error:", err);
       return NextResponse.json(
         { error: err.message || "Failed to save response" },
-        { status: backendResponse.status }
+        { status: backendResponse.status },
       );
     }
 
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     console.error("Error saving response:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

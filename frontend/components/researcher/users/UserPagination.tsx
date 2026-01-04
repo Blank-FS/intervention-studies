@@ -7,7 +7,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useRouter } from "next/navigation";
 
 interface Props {
   currentPage: number; // 0-based
@@ -16,8 +15,6 @@ interface Props {
 }
 
 const UserPagination = ({ currentPage, totalPages, onPageChange }: Props) => {
-  const router = useRouter();
-
   const goToPage = (page: number) => {
     onPageChange(page);
   };
@@ -26,7 +23,7 @@ const UserPagination = ({ currentPage, totalPages, onPageChange }: Props) => {
     const items = [];
     const maxVisible = 5;
     let start = Math.max(0, currentPage - 2);
-    let end = Math.min(totalPages - 1, start + maxVisible - 1);
+    const end = Math.min(totalPages - 1, start + maxVisible - 1);
 
     start = Math.max(0, end - maxVisible + 1);
 

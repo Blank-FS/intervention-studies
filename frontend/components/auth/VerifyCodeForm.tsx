@@ -27,14 +27,11 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
 
     setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/verify`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, code }),
-        },
-      );
+      const res = await fetch(`/api/proxy?path=/auth/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
 
       if (res.ok) {
         // on success, log in the user automatically and set cookie
@@ -77,7 +74,7 @@ export default function VerifyCodeForm({ email }: VerifyCodeFormProps) {
         <p className="text-sm">
           A code has been sent to{" "}
           <i className="text-umich-maize font-bold">{email}</i>. Please enter it
-          below. If you don't see it, you may need to{" "}
+          below. If you don&apos;t see it, you may need to{" "}
           <i className="text-umich-maize font-bold">check your spam</i> folder.
         </p>
 

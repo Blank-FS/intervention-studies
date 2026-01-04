@@ -9,14 +9,14 @@ export async function GET(req: Request) {
   if (!videoPath) {
     return NextResponse.json(
       { error: "No video path provided" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   const token = getTokenFromCookies(req);
   if (!token) return NextResponse.json({ error: "No token" }, { status: 401 });
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${videoPath}`, {
+  const res = await fetch(`${process.env.INTERNAL_API_URL}/${videoPath}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
     const text = await res.text();
     return NextResponse.json(
       { error: text || "Request failed" },
-      { status: res.status }
+      { status: res.status },
     );
   }
 

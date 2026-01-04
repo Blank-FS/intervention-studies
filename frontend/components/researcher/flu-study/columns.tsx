@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import FluStudyData from "./FluStudyData";
+import DeleteResponse from "./DeleteResponse";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,7 +17,9 @@ export type FluStudyResponse = {
   postVaxIntent: number;
 };
 
-export const getColumnDef = (): ColumnDef<FluStudyResponse>[] => [
+export const getColumnDef = (
+  refetchData: () => void,
+): ColumnDef<FluStudyResponse>[] => [
   {
     accessorKey: "id",
     header: "User ID",
@@ -46,11 +49,19 @@ export const getColumnDef = (): ColumnDef<FluStudyResponse>[] => [
     header: "Post Vax Intent",
   },
   {
-    id: "completeData",
-    header: "Complete Data",
+    id: "completeResponse",
+    header: "Complete Response",
     cell: ({ row }) => {
       const id = row.original.id;
       return <FluStudyData id={id} />;
+    },
+  },
+  {
+    id: "deleteResponse",
+    header: "Delete Response",
+    cell: ({ row }) => {
+      const id = row.original.id;
+      return <DeleteResponse id={id} onDelete={refetchData} />;
     },
   },
 ];

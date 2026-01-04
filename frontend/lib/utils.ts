@@ -27,7 +27,7 @@ export function formatToLongLocalStringWithTZ(date: Date): string {
   return new Intl.DateTimeFormat("en-US", options).format(date);
 }
 
-export function convertToCSV<T extends Record<string, any>>(data: T[]) {
+export function convertToCSV<T extends Record<string, unknown>>(data: T[]) {
   if (!data.length) return "";
 
   // Collect all unique keys across all rows

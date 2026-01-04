@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Separator } from "../ui/separator";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth-provider";
 import { LogOutIcon } from "lucide-react";

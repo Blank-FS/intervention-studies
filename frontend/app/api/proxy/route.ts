@@ -1,7 +1,7 @@
 import { proxyRequest } from "@/lib/proxy";
 import { NextRequest } from "next/server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.INTERNAL_API_URL;
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

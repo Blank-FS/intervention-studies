@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Question, Option } from "@/types/definition";
+import { Question, Option } from "@/lib/types/question";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -46,7 +46,7 @@ const InteractiveQuestionItem: React.FC<QuestionProps> = ({
         idx != undefined ? `Q${idx + 1} - ` : ""
       }${question.questionText}`}</h5>
 
-      <ul className="space-y-2 list-none">
+      <ul className="list-none space-y-2">
         {shuffledOptions.map((opt) => {
           // Determine background color after submission
           let optionClass =

@@ -1,0 +1,52 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      INTERNAL_API_URL: http://backend:8080
+      NODE_ENV: production
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    container_name: springboot
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # Database
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/labdb
+      SPRING_DATASOURCE_USERNAME: labuser
+      SPRING_DATASOURCE_PASSWORD: labpassword
+      SPRING_JPA_DDL_AUTO: update
+      # CORS
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:3000
+      # Mail
+      SPRING_MAIL_USERNAME: your_email@gmail.com
+      SPRING_MAIL_PASSWORD: your_app_password
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: labdb
+      POSTGRES_USER: labuser
+      POSTGRES_PASSWORD: labpassword
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,9 +1,9 @@
 import React from "react";
-import { Module } from "@/types/definition";
 import EditableQuestionSection from "./EditableQuestionSection";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Module } from "@/lib/types/module";
 
 const EditableModule = ({
   module,
@@ -14,8 +14,8 @@ const EditableModule = ({
 }) => {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-4 items-center">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
           <h3 className="text-2xl font-bold">{module.title}</h3>
           <Badge variant="default">Module ID: {module.id}</Badge>
         </div>
@@ -27,7 +27,7 @@ const EditableModule = ({
         <video
           src={`/api/videos?path=${module.videoPath}`}
           controls
-          className="w-full max-h-96 rounded border"
+          className="max-h-96 w-full rounded border"
         />
       </Card>
 

@@ -1,6 +1,6 @@
 "use client";
 import QuestionCreateForm from "@/components/researcher/actions/QuestionCreateForm";
-import { Question } from "@/types/definition";
+import { Question } from "@/lib/types/question";
 import React, { useEffect, useState } from "react";
 import EditableQuestionItem from "./EditableQuestionItem";
 
@@ -32,7 +32,7 @@ const EditableQuestionSection = ({ moduleId }: { moduleId: number }) => {
         <h4 className="text-xl font-semibold">Questions</h4>
         <QuestionCreateForm
           moduleId={moduleId}
-          onCreated={handleQuestionCreated}
+          onCreate={handleQuestionCreated}
         />
       </div>
       {questions.map((q, idx) => (
