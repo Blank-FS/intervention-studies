@@ -7,13 +7,16 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
+import { Participant } from "@/lib/types/user";
 
 const FluStudyCard = ({
   completed = false,
   isAdmin = false,
+  participant,
 }: {
   completed?: boolean;
   isAdmin?: boolean;
+  participant?: Participant;
 }) => {
   const [isActive, setIsActive] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
@@ -93,7 +96,9 @@ const FluStudyCard = ({
           </Button>
         ) : (
           /* PARTICIPANT – START */
-          <Link href="/participant/flu-study">
+          <Link
+            href={`/participant/flu-study?PROLIFIC_PID=${participant?.prolificId}&STUDY_ID=${participant?.studyId}&SESSION_ID=${participant?.sessionId}`}
+          >
             <Button className="bg-umich-maize text-umich-blue hover:bg-umich-maize/80 font-bold">
               Start
             </Button>

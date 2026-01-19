@@ -2,33 +2,35 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
+import { useSearchParams } from "next/navigation";
+import { Participant } from "@/lib/types/user";
 
-const FluStudy = () => {
-  const [loading, setLoading] = useState(true);
+const FluStudy = ({ participant }: { participant: Participant }) => {
+  // const [loading, setLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  useEffect(() => {
-    async function fetchCompleteStatus() {
-      try {
-        const res = await fetch(`/api/proxy?path=/api/flu-study/status`, {
-          method: "GET",
-          credentials: "include",
-        });
+  // useEffect(() => {
+  //   async function fetchCompleteStatus() {
+  //     try {
+  //       const res = await fetch(`/api/proxy?path=/api/flu-study/status`, {
+  //         method: "GET",
+  //         credentials: "include",
+  //       });
 
-        if (!res.ok) {
-          const err = await res.json();
-          console.error("Failed to fetch study status:", err);
-          return;
-        }
+  //       if (!res.ok) {
+  //         const err = await res.json();
+  //         console.error("Failed to fetch study status:", err);
+  //         return;
+  //       }
 
-        const data: { message: string; completed: boolean } = await res.json();
-        setIsCompleted(data.completed);
-      } catch (err) {
-        console.error("Network error:", err);
-      }
-    }
-    fetchCompleteStatus().finally(() => setLoading(false));
-  }, []);
+  //       const data: { message: string; completed: boolean } = await res.json();
+  //       setIsCompleted(data.completed);
+  //     } catch (err) {
+  //       console.error("Network error:", err);
+  //     }
+  //   }
+  //   fetchCompleteStatus().finally(() => setLoading(false));
+  // }, []);
 
   useEffect(() => {
     async function handleMessage(event: MessageEvent) {
@@ -41,14 +43,16 @@ const FluStudy = () => {
 
       // Save study results to backend
       try {
-        const res = await fetch(`/api/proxy?path=/api/flu-study`, {
+        const res = await fetch(`/api/proxy?path=/api/flu-study/submit`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
           body: JSON.stringify({
             csvData: csv,
+            prolificId: participant.prolificId,
+            studyId: participant.studyId,
+            sessionId: participant.sessionId,
           }),
         });
 
@@ -69,13 +73,13 @@ const FluStudy = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <Spinner className="size-24" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex h-full w-full items-center justify-center">
+  //       <Spinner className="size-24" />
+  //     </div>
+  //   );
+  // }
 
   if (isCompleted) {
     return (

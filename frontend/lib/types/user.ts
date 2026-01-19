@@ -6,3 +6,9 @@ export interface User {
   role: "USER" | "ADMIN" | "SUPERADMIN";
   enabled: boolean;
 }
+
+export interface Participant {
+  prolificId: string;
+  studyId: string;
+  sessionId: string;
+}

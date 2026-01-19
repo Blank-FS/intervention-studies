@@ -26,7 +26,12 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Public routes always allowed
-  if (pathname.startsWith("/_next") || pathname.startsWith("/api")) {
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/participant") ||
+    pathname.startsWith("/flu-study")
+  ) {
     return NextResponse.next();
   }
 

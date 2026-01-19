@@ -4,8 +4,8 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import edu.umich.baac.dto.FluStudyResponseDTO;
 import edu.umich.baac.model.User;
-import edu.umich.baac.model.UserFluStudy;
-import edu.umich.baac.repository.UserFluStudyRepository;
+import edu.umich.baac.model.FluStudyResponse;
+import edu.umich.baac.repository.FluStudyResponseRepository;
 import edu.umich.baac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,21 +19,22 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class UserFluStudyService {
-    private final UserFluStudyRepository userFluStudyRepo;
+public class FluStudyResponseService {
+    private final FluStudyResponseRepository fluStudyResponseRepo;
     private final UserRepository userRepo;
 
     @Transactional
-    public boolean saveResponse(String email, String csvData){
-        // 1. Get user
-        User currentUser = userRepo.findByEmail(email).orElse(null);
-        if(currentUser==null){
+    public boolean saveResponse(String csvData, String prolificId, String studyId, String sessionId) {
+        // Must contain all three ids to be considered valid response
+        if(prolificId == null || prolificId.isEmpty() || studyId == null || studyId.isEmpty() || sessionId == null || sessionId.isEmpty())
             return false;
-        }
 
-        // 2. Save response
-        UserFluStudy response = userFluStudyRepo.findByUser(currentUser).orElse(null);
-        Map<String,String> responseMap = new HashMap<>();
+        // If response with id tuple combination already exists
+        if(fluStudyResponseRepo.existsByProlificIdAndStudyIdAndSessionId(prolificId, studyId, sessionId))
+            return false;
+
+        // Save response
+        Map<String,String> responseMap;
         try {
             responseMap = getHeaderValueMap(csvData);
         } catch (IOException | CsvValidationException e) {
@@ -44,73 +45,40 @@ public class UserFluStudyService {
         final Integer baselineVaxIntent = valid ? Integer.parseInt(responseMap.get("baseline_vax_intent_0_100")) : -1;
         final Integer postVaxIntent = valid ? Integer.parseInt(responseMap.get("post_vax_intent_0_100")) : -1;
 
-        if(response==null){
-            UserFluStudy newResponse = UserFluStudy.builder().user(currentUser)
-                    .completed(true)
-                    .csvData(csvData)
-                    .age(age)
-                    .valid(valid)
-                    .baselineVaxIntent(baselineVaxIntent)
-                    .postVaxIntent(postVaxIntent)
-                    .build();
-            userFluStudyRepo.save(newResponse);
-            return true;
-        }
-        if(response.getCompleted()==true)
-            return false;
-        response.setCompleted(true);
-        response.setCsvData(csvData);
-        response.setAge(age);
-        response.setValid(valid);
-        response.setBaselineVaxIntent(baselineVaxIntent);
-        response.setPostVaxIntent(postVaxIntent);
-        userFluStudyRepo.save(response);
+        FluStudyResponse newResponse = FluStudyResponse.builder()
+                .prolificId(prolificId)
+                .studyId(studyId)
+                .sessionId(sessionId)
+                .completed(true)
+                .csvData(csvData)
+                .age(age)
+                .valid(valid)
+                .baselineVaxIntent(baselineVaxIntent)
+                .postVaxIntent(postVaxIntent)
+                .build();
+        fluStudyResponseRepo.save(newResponse);
         return true;
     }
 
-    public UserFluStudy getResponse(String email){
-        // 1. Get user
-        User currentUser = userRepo.findByEmail(email).orElse(null);
-        if(currentUser==null){
-            return null;
-        }
-
-        // 2. Get response
-        return userFluStudyRepo.findByUser(currentUser).orElse(null);
+    public FluStudyResponse getResponse(String email){
+        return null;
     }
 
-    public UserFluStudy getResponseById(Long id){
-        // 1. Get user
-        User user = userRepo.findById(id).orElse(null);
-        if(user==null){
-            return null;
-        }
-
-        // 2. Get response
-        UserFluStudy response = userFluStudyRepo.findByUser(user).orElse(null);
-        if(response != null && response.getCompleted()==false)
-            return null;
-        return response;
+    public FluStudyResponse getResponseById(Long id){
+        return fluStudyResponseRepo.findById(id).orElse(null);
     }
 
     @Transactional
-    public boolean deleteResponseByUserId(Long id){
-        // 1. Get user
-        User user = userRepo.findById(id).orElse(null);
-        if(user==null){
+    public boolean deleteResponseById(Long id){
+        if (!fluStudyResponseRepo.existsById(id)) {
             return false;
         }
-
-        // 2. Delete response
-        if (user.getUserFluStudy() != null) {
-            user.setUserFluStudy(null);  // orphanRemoval triggers DELETE
-            return true;
-        }
-        return false;
+        fluStudyResponseRepo.deleteById(id);
+        return true;
     }
 
     public List<FluStudyResponseDTO> getAllResponses(){
-        List<UserFluStudy> list = userFluStudyRepo.findAll();
+        List<FluStudyResponse> list = fluStudyResponseRepo.findAll();
         return list.stream().map(FluStudyResponseDTO::new).toList();
     }
 

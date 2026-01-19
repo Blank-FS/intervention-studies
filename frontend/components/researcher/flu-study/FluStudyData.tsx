@@ -25,7 +25,7 @@ const FluStudyData = ({ id }: { id: number }) => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `flu_study_user_${id}_data.csv`;
+      link.download = `flu_study_response_${id}_data.csv`;
       document.body.appendChild(link);
       link.click();
 

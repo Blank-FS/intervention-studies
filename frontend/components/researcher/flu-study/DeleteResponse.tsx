@@ -14,7 +14,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { createDropdownMenuScope } from "@radix-ui/react-dropdown-menu";
 
 const DeleteResponse = ({
   id,
@@ -29,12 +28,9 @@ const DeleteResponse = ({
   const onSubmit = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `/api/proxy?path=/api/flu-study?userId=${id}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const response = await fetch(`/api/proxy?path=/api/flu-study?id=${id}`, {
+        method: "DELETE",
+      });
       setIsLoading(false);
 
       console.log("Delete response status:", response.json());

@@ -45,8 +45,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/auth/**"))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/uploads/**").permitAll().anyRequest().authenticated())
+                        .ignoringRequestMatchers("/auth/**", "/api/flu-study/submit"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/uploads/**", "/api/studies/*/active", "/api/flu-study/submit").permitAll().anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                         jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).

@@ -4,13 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "user_flu_study")
+@Table(
+        name = "flu_study_response",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_prolific_study_session",
+                        columnNames = {"prolific_id", "study_id", "session_id"}
+                )
+        }
+    )
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class UserFluStudy {
+public class FluStudyResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,6 +41,13 @@ public class UserFluStudy {
     @Column
     private Integer postVaxIntent;
 
-    @OneToOne
-    private User user;
+    @Column(name = "prolific_id", nullable = false)
+    private String prolificId;
+
+    @Column(name = "study_id", nullable = false)
+    private String studyId;
+
+    @Column(name = "session_id", nullable = false)
+    private String sessionId;
+
 }

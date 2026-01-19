@@ -44,8 +44,4 @@ public class User {
 
     @Column
     private Instant verificationExpiry;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private UserFluStudy userFluStudy;
 }

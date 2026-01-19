@@ -9,8 +9,9 @@ import DeleteResponse from "./DeleteResponse";
 
 export type FluStudyResponse = {
   id: number;
-  email: string;
   prolificId: string;
+  studyId: string;
+  sessionId: string;
   age: number;
   valid: boolean;
   baselineVaxIntent: number;
@@ -22,15 +23,19 @@ export const getColumnDef = (
 ): ColumnDef<FluStudyResponse>[] => [
   {
     accessorKey: "id",
-    header: "User ID",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
+    header: "ID",
   },
   {
     accessorKey: "prolificId",
     header: "Prolific ID",
+  },
+  {
+    accessorKey: "studyId",
+    header: "Study ID",
+  },
+  {
+    accessorKey: "sessionId",
+    header: "Session ID",
   },
   {
     accessorKey: "age",
