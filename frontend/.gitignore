@@ -41,4 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # Other
-/public/flu-study
+/public/flu-study*
